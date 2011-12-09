@@ -1,0 +1,63 @@
+<!-- 远程部署脚本-->
+<project name="xingcloud" basedir="." default="run" >
+	<property name="build.dir" location="bindir"/>
+	<property name="lib.dir" location="WebContent/WEB-INF/lib"/>
+	<property name="war.dir" location="${build.dir}/war"/>
+	<property name="project.name" value="game"/>
+	<property name="remote.host" value="10.18.138.234"/>
+	<property name="remote.user" value="root"/>
+	<property name="remote.password" value="P@ssw0rd"/>
+	<property name="remote.resin" value="/opt/resin-4.0.17"/>
+	<property name="remote.resin.webapps" value="/var/www/webapps"/>
+	
+	
+	<path id="classpath.dir"> 
+		<pathelement path="${build.dir}"/>
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	<!-- 清理相应的文件-->
+	<target name="clean">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${build.dir}"/>
+			<fileset file="${lib.dir}/${project.name}.jar"/>
+			<fileset dir="${war.dir}"/>
+		    <fileset file="${war.dir}/${project.name}.war"/>
+		</delete>
+	</target>
+	<!-- 对java文件进行编译，需要使用到本地部署脚本的compile-->
+	<target name="compile">
+		<mkdir dir="${war.dir}"/>
+		<ant antfile="deploy-local.xml" target="compile"/>
+	</target>
+	<!-- 对编译好的文件进行jar打包，需要使用到本地部署脚本的build-->
+	<target name="build">
+		<ant antfile="deploy-local.xml" target="build"/>
+	</target>
+	<!-- 生成war包-->
+	<target name="war-build">
+		<war destfile="${war.dir}/${project.name}.war" webxml="WebContent/WEB-INF/web.xml">
+		  <fileset dir="WebContent/"/>
+		</war>
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset file="${lib.dir}/${project.name}.jar"/>
+		</delete>
+	</target>
+	<!-- 进行远程部署-->
+	<target name="remote-deploy">
+		<!-- 部署到测试服务器 -->
+		<!-- 如果遇到 Cause: Could not load a dependent class com/jcraft/jsch/UserInfo It is not enough to have Ant's optional JAR这个问题 -->
+		<!-- 在eclipse中Window>Preferences>Ant>Runtime>Classpath Select Global Entries and pick Add External JARs 加入从lib中的jsch.jar包 --> 
+		<echo>如果遇到 Cause: Could not load a dependent class com/jcraft/jsch/UserInfo It is not enough to have Ant's optional JAR这个问题 </echo>
+		<echo>在eclipse中Window--Preferences--Ant--Runtime--Classpath Select "Global Entries" 在其中加入在本项目WebContent--WEB-INF--lib中的jsch-0.1.44.jar</echo>
+		<sshexec host="${remote.host}" username="${remote.user}"  password="${remote.password}"
+		    trust="true" command="/etc/init.d/resin stop;rm -rf ${remote.resin.webapps}/${project.name}"/>
+		<scp file="${war.dir}/${project.name}.war" 
+			todir="${remote.user}:${remote.password}@${remote.host}:${remote.resin.webapps}"
+			trust="true"/>
+		<sshexec host="${remote.host}" username="${remote.user}"  password="${remote.password}"
+			trust="true" command="/etc/init.d/resin start"/>
+	</target>
+	<target name="run" depends="clean,compile,build,war-build,remote-deploy"/>
+</project>

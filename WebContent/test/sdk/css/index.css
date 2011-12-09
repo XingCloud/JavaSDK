@@ -1,0 +1,78 @@
+@CHARSET "UTF-8";
+body {
+background: #999;
+text-align: center;
+color: #333;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+#header {
+margin-right: auto;
+margin-left: auto;
+padding: 0px;
+width: 1000px;
+background: #EEE;
+height: 100px;
+text-align: left;
+}
+#contain {
+margin-left: auto;
+margin-right: auto;
+width: 1000px;
+}
+#mainbg {
+float: left;
+padding: 0px;
+width: 1000px;
+background: #6666CC;
+}
+#right {
+float: right;
+margin: 2px 0px 2px 0px;
+padding: 0px;
+width: 798px;
+background: #ccd2de;
+text-align:left;
+}
+#left {
+float: left;
+margin: 2px 2px 0px 0px;
+padding: 0px;
+background: #F2F3F7;
+width: 200px;
+text-align:left;
+}
+#footer {
+clear: both;
+margin-right: auto;
+margin-left: auto;
+padding: 0px;
+width: 1000px;
+background: #EEE;
+height: 60px;
+}
+#actionmenu{
+text-align:right;
+}
+#submitButton{
+height:40px; 
+width:70px;
+font-size:15px;
+}
+#adminmenu{
+cursor:pointer;
+}
+#servicemenu{
+cursor:pointer;
+}
+#actionmenu{
+cursor:pointer;
+}
+#auditchangemenu{
+cursor:pointer;
+}
+.method{
+cursor:pointer;
+}	
+.text {margin:0px;padding:20px;}
+.serviceNames{color:red;margin-left:10px}
+.method{margin-left:30px;}

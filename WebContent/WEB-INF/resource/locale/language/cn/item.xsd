@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.iw.com/sns/platform/" targetNamespace="http://www.iw.com/sns/platform/">
+	<complexType name="ItemSpec">
+		<attribute name="id" type="string"/>
+		<attribute name="name" type="string"/>
+		<attribute name="description" type="string"/>
+		<attribute name="type" type="string"/>
+		<attribute name="src" type="string"/>
+		<attribute name="cost" type="integer"/>
+		<attribute name="icon" type="string"/>
+		<attribute name="level" type="integer"/>
+	</complexType>
+	<complexType name="Group">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="0" name="ItemSpec" type="tns:ItemSpec"/>
+			<element maxOccurs="unbounded" minOccurs="0" name="Group" type="tns:Group"/>
+		</sequence>
+		<attribute name="id" type="string"/>
+		<attribute name="name" type="string"/>
+	</complexType>
+	<complexType name="Database">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="0" name="Group" type="tns:Group"/>
+			<element maxOccurs="1" minOccurs="0" name="Resource" type="tns:Resource"/>
+		</sequence>
+		<attribute name="id" type="string"/>
+		<attribute name="cellSize" type="string"/>
+		<attribute name="packages" type="string"/>
+		<attribute name="src" type="string"/>
+	</complexType>
+	<complexType name="Resource">
+		<sequence>
+			<element maxOccurs="unbounded" minOccurs="0" name="Entry" type="tns:Entry"/>
+		</sequence>
+	</complexType>
+	<complexType name="Entry">
+		<attribute name="src" type="string"/>
+	</complexType>
+	<element name="database" type="tns:Database"/>
+</schema>

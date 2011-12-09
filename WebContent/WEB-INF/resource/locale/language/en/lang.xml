@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources type="en">
+	  <string name="nameLabel">Name</string>
+	  <string name="expLabel">Exp</string>
+	  <string name="coinsLabel">Coins</string>
+	  <string name="buyButton">Buy</string>
+	  <string name="sowButton">Sow</string>
+	  <string name="wateringButton">Watering</string>
+	  <string name="reapButton" >Reap</string>
+	  <string name="sellButton">Sell</string>
+	   <string name="landName">land</string>
+	    <string name="seedName">seed</string>
+	    <string name="cropName">crop</string>
+	    <string name="fruitName">fruit</string>
+	    <string name="fruitLabel">Fruit</string>
+</resources>

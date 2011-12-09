@@ -1,0 +1,64 @@
+<!-- 本地部署脚本-->
+<project name="xingcloud" basedir="." default="run">
+	<property name="build.dir" location="bindir" />
+	<property name="lib.dir" location="WebContent/WEB-INF/lib" />
+	<!-- 请在 tomcat.dir中指定tomcat的主目录 -->
+	<property name="tomcat.dir" location="E:\\Program Files\\Apache Software Foundation\\apache-tomcat-6.0.32" />
+	<property name="deploy.dir" location="${tomcat.dir}\\webapps" />
+	<property name="resin.webapps.dir" location="/var/www/webapps" />
+	<property name="src.dir" location="src" />
+	<property name="project.name" value="game" />
+	<path id="classpath.dir">
+		<pathelement path="${build.dir}" />
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<!-- 清理相应文件-->
+	<target name="clean">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${build.dir}" />
+			<fileset file="${lib.dir}/${project.name}.jar" />
+			<fileset dir="${deploy.dir}/${project.name}" />
+			<fileset file="${deploy.dir}/${project.name}.war" />
+		</delete>
+		<available file="${deploy.dir}" type="dir" property="tomcat.exist" />
+		<available file="${resin.webapps.dir}" type="dir" property="resin.exist" />
+	</target>
+	<!-- 编译java文件-->
+	<target name="compile">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/classes" />
+		<javac encoding="utf-8" destdir="${build.dir}/classes" source="1.6" target="1.6" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="classpath.dir" />
+		</javac>
+		<copy todir="${build.dir}/classes">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+	<!-- 将编译好的java文件打成jar包-->
+	<target name="build">
+		<jar destfile="${lib.dir}/${project.name}.jar">
+			<fileset dir="${build.dir}/classes" />
+		</jar>
+	</target>
+	<!-- 打包成war包并部署到本地-->
+	<target name="local-deploy.tomcat" if="${tomcat.exist}">
+		<war destfile="${deploy.dir}/${project.name}.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent/" />
+		</war>
+	</target>
+
+	<target name="local-deploy.resin" if="${resin.exist}">
+		<war destfile="${resin.webapps.dir}/${project.name}.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="WebContent/" />
+		</war>
+	</target>
+	<target name="clear">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset file="${lib.dir}/${project.name}.jar" />
+		</delete>
+	</target>
+	<target name="run" depends="clean,compile,build,local-deploy.tomcat,local-deploy.resin,clear" />
+</project>

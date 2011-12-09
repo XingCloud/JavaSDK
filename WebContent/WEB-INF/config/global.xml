@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xingcloud:config xmlns:xingcloud="http://www.iw.com/sns/config/">
+	<!-- 这个文件用来定义多语言服务的相关默认设定 -->
+	<project>
+		<!-- 设定游戏项目的名称 -->
+		<name>xingcloud-game</name>
+		<!-- 设定项目的语言环境，在使用多语言服务时，系统会根据这个设置查找相应的配置，可以参考资源文件下的相应文件进行理解 -->
+		<locale>cn</locale>
+		<!-- 设定默认的语言，在使用多语言服务时，如果使用到的多语言的文件且没有传入语言参数，则后台会根据这个设置查找相应的文件作为服务的内容返回，可以参考资源文件下的相应文件进行理解 -->
+		<language>cn</language>
+		<!-- 统计分析日志开关，设置为false时系统自动统计日志不发送用户自定义日志发送，设置为true时都发送 -->
+		<statistics_log>false</statistics_log>
+	</project>
+	<!-- 使用安全验证授权时使用 -->
+	<security>
+	    <oauth>
+	        <!-- 普通请求安全认证 -->
+	        <!-- 认证的超时时间 -->
+	        <expires>86400</expires>
+	        <!-- oauth全局开关，如果不是false，表示开启安全认证 -->
+	        <default>false</default>
+	        <service>
+	        <!-- enabled白名单 service中@CloudService的api.方法名 所有加入白名单的方法强制安全认证
+	            <enabled>user.user.doLogin</enabled>
+	            <enabled>user.user.doPlatformLogin</enabled> -->
+	        <!-- disabled黑名单 service中@CloudService的api.方法名 所有加入黑名单的方法不进行安全认证
+	            <disabled>user.user.doGet</disabled> -->
+	        </service>
+	        <!-- 普通请求安全认证 -->
+	        <!-- 两个安全验证的key值-->
+	        <consumerKey>#consumer_key#</consumerKey>
+	        <secretKey>#secret_key#</secretKey>
+	    </oauth>
+	    <admin>
+	        <!-- GM请求安全认证 -->
+	        <!-- 认证的超时时间 -->
+	        <expires>86400</expires>
+	        <!-- admin全局开关，如果不是false，表示开启安全认证 -->
+	        <default>true</default>
+	        <!-- GM请求安全认证 -->
+	        <!-- 两个安全验证的key值 -->
+	        <consumerKey>#consumer_key#</consumerKey>
+	        <secretKey>#secret_key#</secretKey>
+	    </admin>
+	</security>
+	<persistence>
+		<!-- 腾讯CMEM配置数据环境配置 <mc_mysql> CMEM地址 <mchost>10.18.138.171</mchost> CMEM端口 
+			<mcport>11211</mcport> mysql地址 <myhost>10.18.138.171</myhost> mysql端口 <myport>3306</myport> 
+			mysql用户名 <myuser>bigfoot</myuser> mysql密码 <mypassword>bigfoot</mypassword> 
+			mysql数据库名称 <mydatabase>bf</mydatabase> <myinitconn>5</myinitconn> <mymaxconn>10</mymaxconn> 
+			</mc_mysql> -->
+		<data_proxy>
+			<instance_id>xingyun</instance_id>
+			<host>10.18.138.170</host>
+			<port>9090</port>
+		</data_proxy>
+		<!--<mysql> <host>localhost</host> <port>3306</port> <user>root</user> 
+			<password></password> <database>test</database> <myinitconn>5</myinitconn> 
+			<mymaxconn>10</mymaxconn> </mysql> -->
+	</persistence>
+
+	<memcached>
+		<host>10.18.138.234</host>
+		<port>12000</port>
+		<available>false</available>
+	</memcached>
+
+	<service>
+		<slow_request_warning>10</slow_request_warning>
+	</service>
+</xingcloud:config>

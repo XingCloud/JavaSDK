@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tns:database packages="model.item" xmlns:tns="http://www.iw.com/sns/platform/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Group id="land" name="LandGroup">
+    <ItemSpec class="LandItemSpec" id="1001" name="landName" src="farmLand"/>
+  </Group>
+  <Group id="seed" name="SeedGroup">
+    <ItemSpec class="SeedItemSpec" id="2001" name="seedName" src="strawBerrySeed" cropId="3001" cost="10"/>
+  </Group>
+  <Group id="crop" name="CropGroup">
+    <ItemSpec class="CropItemSpec" id="3001" name="cropName" src="strawBerry" reapTime="7" fruitId="4001" fruitMin="5" fruitMax="10"/>
+  </Group>
+  <Group id="fruit" name="FruitGroup">
+    <ItemSpec class="FruitItemSpec" id="4001" name="fruitName" src="strawBerryFruit" cost="10"/>
+  </Group>
+</tns:database>

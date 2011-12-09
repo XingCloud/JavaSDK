@@ -1,0 +1,70 @@
+<project name="xingcloud" basedir="." default="run">
+	<property name="src.dir" location="src/" />
+	<property name="doc.dir" location="./com.xingcloud.gameengine_doc/" />
+	<property name="build.dir" location="antbuild/" />
+	<property name="lib.dir" location="WebContent/WEB-INF/lib/" />
+	<property name="deploy.dir" location="." />
+	<property name="key.file" value="WebContent/WEB-INF/config/global.xml" />
+
+	<property name="module.name" value="com.xingcloud.gameengine" />
+	<property name="module.version" value="1.3.0.1" />
+	<property name="module.type" value="distribution" />
+	<property name="project.name" value="${module.name}-${module.version}.${module.type}" />
+
+	<property name="skey" value="" />
+	<property name="ckey" value="" />
+
+	<path id="classpath.dir">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${build.dir}" />
+			<fileset dir="${doc.dir}" />
+			<fileset file="${deploy.dir}/${project.name}.jar" />
+		</delete>
+	</target>
+
+	<target name="prepare">
+		<mkdir dir="${doc.dir}" />
+		<mkdir dir="${build.dir}" />
+		<!--<replace file="${key.file}" token="#consumer_key#" value="${ckey}" summary="true" encoding="UTF-8"/>
+		<replace file="${key.file}" token="#secret_key#" value="${skey}" summary="true" encoding="UTF-8"/>-->
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${build.dir}/classes" />
+		<javac encoding="utf-8" destdir="${build.dir}/classes" source="1.6" target="1.6" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="classpath.dir" />
+		</javac>
+		<copy todir="${build.dir}/classes">
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<target name="build">
+		<jar destfile="${deploy.dir}/${project.name}.jar">
+			<fileset dir="${build.dir}/classes" />
+		</jar>
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="doc">
+		<javadoc destdir="${doc.dir}" access="protected" encoding="UTF-8" docencoding="UTF-8" splitindex="false" use="false" version="true" windowtitle="XingCloud Java SDK API" linksource="true">
+			<packageset dir="${src.dir}">
+			</packageset>
+			<classpath>
+				<fileset dir="${lib.dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javadoc>
+	</target>
+
+	<target name="run" depends="clean,prepare,compile,build,doc" />
+	<target name="simplerun" depends="clean,prepare,compile,build"/>
+</project>

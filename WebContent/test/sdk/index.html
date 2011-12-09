@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>javaSDK测试工具</title>
+<!-- jquery插件 -->
+<script src="js/jquery-1.4.4.min.js"></script>
+<!-- 通过js加载信息 -->
+<script src="js/basic.js"></script>
+<!-- css样式 -->
+<link href="css/index.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<div id="header">JavaSDK Test
+		<p>测试工具提供对service、action、auditchange以及admin功能的支持。系统根据返回值自动判定返回类型。action的execute方法中data的输入值请参照API</p>
+	</div>
+	<div id="contain">
+		<div id="mainbg">
+			<div id="right">
+				<div class="text">
+					<p>content</p>
+					<div id="serviceContent">
+						服务名为：<input type="text" id="serviceName"> 
+						方法名为：<input type="text" id="methodName">
+						<div id="methodDescription"></div>
+					</div>
+					<div id="inputTable">
+						<table id="serviceTable">
+							<tr>
+								<th>ID:</th>
+							</tr>
+							<tr>
+								<td>Param</td><td>Value</td><td>Type</td><td>Desc</td>
+							</tr>
+							<tr>
+								<td><input value="id" type="text" readonly></td>
+								<td><input value="1" type="text" id="idValue"></td>
+								<td><input value="int" type="text" readonly></td>
+								<td><input value="请求ID序号" type="text" readonly></td>
+							</tr>
+							<tr>
+								<th>Info:</th>
+							</tr>
+							<tr>
+								<td><input value="platformAppId" type="text" readonly></td>
+								<td><input value="" type="text" id="platformAppIdValue"></td>
+								<td><input value="string" type="text" readonly></td>
+								<td><input value="平台app id" type="text" readonly></td>
+							</tr>
+							<tr>
+								<td><input value="platformUserId" type="text" readonly></td>
+								<td><input value="" type="text" id="platformUserIdValue"></td>
+								<td><input value="string" type="text" readonly></td>
+								<td><input value="平台用户id" type="text" readonly></td>
+							</tr>
+							<tr>
+								<td><input value="gameUserId" type="text" readonly></td>
+								<td><input value="" type="text" id="gameUserIdValue"></td>
+								<td><input value="string" type="text" readonly></td>
+								<td><input value="游戏用户id" type="text" readonly></td>
+							</tr>
+							<tr id="dataInput">
+								<th>Data:</th>
+							</tr>
+						</table>
+						<p><a style="font-weight:bold;">JsonInput</a></p>
+						<textarea cols="80" rows="5" id="jsondatainput"></textarea>
+						<br>											
+						<input type="button" id="submitButton" value="submit">
+						<input type="radio" name="getpost" value="post" checked="checked"/> post 						
+						<input type="radio" name="getpost" value="get"/> get 
+						<input type="radio" name="getpost" value="json"/> json:直接Post发JsonInput中的字符串
+					</div>
+					<div id="resultField">
+						<table id="outputTable">
+							<tr>
+								<th>JSON</th>
+							</tr>
+							<tr>
+								<td><textarea cols="80" rows="4" id="jsonoutput"></textarea></td>
+							</tr>
+							<tr>
+								<th>URL</th>
+							</tr>
+							<tr>
+								<td><textarea cols="80" rows="4" id="urloutput"></textarea></td>
+							</tr>
+							<tr>
+								<th>Result<div id="returnType"></div></th>
+							</tr>
+							<tr>
+								<td><textarea cols="80" rows="10" id="resultoutput"></textarea></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="left">
+				<div class="text">
+					<table>
+						<tr><td><p id="servicemenu">service</p></td><td><p id="actionmenu">action</p></td></tr>
+						<tr><td><p id="adminmenu">admin</p></td><td><p id="auditchangemenu">auditchange</p></td></tr>
+					</table>
+				</div>
+				<div id="servicemenuList"></div>
+				<div id="actionmenuList"></div>
+				<div id="adminmenuList"></div>
+				<div id="auditchangemenuList"></div>
+			</div>
+		</div>
+	</div>
+	<div id="footer"></div>
+</body>
+</html>

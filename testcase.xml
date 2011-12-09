@@ -1,0 +1,204 @@
+<!-- 自动测试sdk的testcase的脚本，具体配置请修改framework.properties-->
+<project name="xingcloud" basedir="." default="run" >
+	<property name="external.jar.dir" location="D:\\workspaces\\externaljar"/>
+	<property name="lib.dir" location="WebContent/WEB-INF/lib"/>
+	<property name="build.dir" location="testbuild"/>
+	<property name="tomcat.home" location="E:\\Program Files\\Apache Software Foundation\\apache-tomcat-6.0.32"/>
+	<property name="deploy.dir" location="${tomcat.home}\\webapps"/>
+	<property name="src.dir" location="src"/>
+	<property name="test.local.dir" location="test/local"/>
+	<property name="test.deploy.dir" location="test/deploy"/>
+	
+	<property name="project.name" value="JAVA_TRUNK"/>
+
+	<tstamp>
+	    <format property="nowstamp" pattern="yyyy-MM-dd" locale="en"/>
+	</tstamp>
+	
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+        <classpath>
+            <fileset dir="ant-svn/lib">
+                <include name="groovy-all-*.jar"/>
+            </fileset>
+        </classpath>
+    </taskdef>
+    
+	<path id="classpath.dir"> 
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<!--    外部jar引用，jar包括运行groovy需要用到的jar包    -->
+		<fileset dir="ant-svn/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+	<path id="deploy.classpath.dir"> 
+		<fileset dir="${build.dir}/testclasses/deploy">
+			<include name="**/*.*"/>
+		</fileset>
+		<fileset dir="${build.dir}/classes">
+			<include name="**/*.*"/>
+		</fileset>
+	</path>
+	
+	<!-- 清理相应的文件-->
+	<target name="clean">
+		<delete includeemptydirs="true" failonerror="false">
+			<fileset dir="${build.dir}"/>
+			<fileset dir="${build.dir}/classes"/>
+			<fileset dir="${build.dir}/testclasses"/>
+			<fileset file="${lib.dir}/${project.name}.jar"/>
+			<fileset dir="${deploy.dir}/${project.name}"/>
+			<fileset file="${deploy.dir}/${project.name}.war"/>
+		</delete>
+	</target>
+	<!-- 编译相应的源文件-->
+	<target name="compile.java">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.dir}/classes"/>
+		<javac encoding="utf-8" destdir="${build.dir}/classes" source="1.6" target="1.6" debug="true" includeantruntime="true"
+            deprecation="false" optimize="false" failonerror="true">
+            <src path="${src.dir}"/>
+            <classpath refid="classpath.dir"/>
+		</javac>
+		<copy todir="${build.dir}/classes">
+			<fileset dir="${src.dir}" excludes="**/*.java"/>
+		</copy>
+	</target>
+	<!-- 编译local测试文件-->
+	<target name="compile.test.local">
+		<mkdir dir="${build.dir}/testclasses/local"/>
+        <groovyc srcdir="${test.local.dir}" destdir="${build.dir}/testclasses/local">
+  			<classpath>
+   			 <pathelement path="${build.dir}/classes"/>
+   			 <fileset dir="${lib.dir}">
+   			 	<include name="**/*.jar"/>
+   			 </fileset>
+ 			 </classpath>
+ 			 <javac source="1.6" target="1.6" debug="true" />
+		</groovyc>
+	</target>
+	
+	<!-- test local 运行local文件夹中所有的testcase，并生成report-->
+	<target name="test.local">
+		<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="no">
+			<formatter type="plain" usefile="false"/>
+			<formatter type="xml"/>
+			<batchtest todir="${build.dir}/testclasses/local">
+				<fileset dir="${build.dir}/testclasses/local">
+					<include name="**/*Test.class"/>
+					<exclude name="**/*TestClass.class"/>
+					<exclude name="**/AbstractTest*.class"/>
+					<exclude name="**/*$*.class"/>
+				</fileset>
+			</batchtest> 
+			<classpath>
+   				<fileset dir="ant-svn/lib">
+   			 		<include name="**/*.jar"/>
+   				</fileset>
+				<fileset dir="${lib.dir}">
+				   	<include name="**/*.jar"/>
+				</fileset>
+				<pathelement location="${build.dir}/classes"/>
+				<pathelement location="${build.dir}/testclasses/local"/>
+			</classpath>
+		</junit>
+		<mkdir dir="reports/${nowstamp}/local"/>		
+		<junitreport todir="reports/${nowstamp}/local">
+		    <fileset dir="${build.dir}/testclasses/local">
+  			    <include name="TEST-*.xml"/>
+ 		    </fileset>
+ 		    <report format="frames" todir="reports/${nowstamp}/local"/>
+		</junitreport>
+	</target>
+	<!-- 编译deploy测试文件-->
+	<target name="compile.test.deploy">
+		<mkdir dir="${build.dir}/testclasses/deploy"/>
+        <groovyc srcdir="${test.deploy.dir}" destdir="${build.dir}/testclasses/deploy">
+  			<classpath>
+   			 <pathelement path="${build.dir}/classes"/>
+   			 <fileset dir="${lib.dir}">
+   					<include name="**/*.jar"/>
+   				</fileset>
+ 			 </classpath>
+ 			 <javac source="1.6" target="1.6" debug="true" />
+		</groovyc>
+		<copy todir="${build.dir}/testclasses/deploy">
+			<fileset dir="${test.deploy.dir}" includes="**/*.properties"/>
+		</copy>
+	</target>
+	<!-- 对编译好的源文件进行打包-->
+	<target name="build">
+		<!--<ant antfile="deploy-local.xml" target="build"/>-->
+	</target>
+	<!-- 关闭本地tomcat服务器-->
+	<target name="tomcat.stop">
+		<exec executable="${tomcat.home}/bin/shutdown.bat" spawn="true" vmlauncher="false">  
+     		 <env key="CATALINA_HOME" value="${tomcat.home}" />  
+   		     <arg line="/c shutdown ${tomcat.home}/bin/shutdown.bat" />  
+  	    </exec>
+	</target>
+	<!-- 部署源文件到本地tomcat服务器的webapps文件夹下-->
+	<target name="local-deploy">
+		<delete dir="${deploy.dir}/${project.name}"/>
+		<delete file="${deploy.dir}/${project.name}.war"/>
+		<ant antfile="deploy-local.xml" target="run" useNativeBasedir="true" inheritAll="false"/>
+	</target>
+	<!-- 启动本地tomcat服务器-->
+	<target name="tomcat.start">
+		<sleep seconds="10"/>
+		<exec executable="${tomcat.home}/bin/startup.bat" spawn="true" vmlauncher="false">  
+     		 <env key="CATALINA_HOME" value="${tomcat.home}" />  
+   		     <arg line="/c start ${tomcat.home}/bin/startup.bat" />  
+  	    </exec>
+		<sleep seconds="10"/>
+	</target>
+	
+
+	<!-- test deploy 运行deploy文件夹中所有的testcase，并生成report-->
+	<target name="test.deploy">
+		<junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="no">
+			<formatter type="plain" usefile="false"/>
+			<formatter type="xml"/>
+			<batchtest todir="${build.dir}/testclasses/deploy">
+				<fileset dir="${build.dir}/testclasses/deploy">
+					<include name="**/*Test.class"/>
+					<exclude name="**/*TestClass.class"/>
+					<exclude name="**/AbstractServiceTest*.class"/>
+					<exclude name="**/*$*.class"/>
+					<exclude name="**/*Connector.class"/>
+				</fileset>
+			</batchtest> 
+			<classpath>
+				<pathelement location="${build.dir}/testclasses/deploy"/>
+   				<fileset dir="ant-svn/lib">
+   			 		<include name="**/*.jar"/>
+   				</fileset>
+   				<fileset dir="${lib.dir}">
+   			 		<include name="**/*.jar"/>
+   				</fileset>
+				<pathelement location="${build.dir}/classes"/>
+			</classpath>
+		</junit>
+		<mkdir dir="reports/${nowstamp}/deploy"/>
+		<junitreport todir="reports/${nowstamp}/deploy">
+		    <fileset dir="${build.dir}/testclasses/deploy">
+  			    <include name="TEST-*.xml"/>
+ 		    </fileset>
+ 		    <report format="frames" todir="reports/${nowstamp}/deploy"/>
+		</junitreport>
+	</target>
+	
+	<!-- 关闭tomcat服务器-->
+	<target name="clear">
+		<exec executable="${tomcat.home}/bin/shutdown.bat" spawn="true" vmlauncher="false">  
+     		 <env key="CATALINA_HOME" value="${tomcat.home}" />  
+   		     <arg line="/c shutdown ${tomcat.home}/bin/shutdown.bat" />  
+  	    </exec>
+	</target>
+	
+	<target name="run" depends="clean,compile.java,compile.test.local,test.local,compile.test.deploy,build,tomcat.stop,local-deploy,tomcat.start,test.deploy,clear"/>
+	<target name="run-dailybuild" depends="clean,compile.java,compile.test.local,test.local,compile.test.deploy,test.deploy"/>
+	
+</project>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog name="Java SDK">
+
+	<version name="1.3.0.1">
+		Feature:
+		1. 将cache功能独立为单独的模块
+		优化：
+		1. 删除与gm相关的逻辑
+		2. 重构test功能代码
+		3. service方法不再要求'do'前缀
+		4. 完善安全认证报错信息
+	</version>
+	
+	<version name="1.3.0.0">
+		新特性：
+		1. 将User(包括OwnedItem), Action, ItemSpec模块单独拆分
+		2. 统计分析模块(statistics)，持久化模块(persistence)，基础工具模块(util)单独发布
+		3. 去除对AuditChange的支持，去除对多语言服务的支持
+		4. 基于memcached实现分布式session和分布式锁机制
+		5. 基于spring实现类的加载、AOP以及事件机制
+		6. 支持POJO风格定义的service和action的定义形式
+		7. 简化配置文件，提供基于注解的配置方式
+		8. 允许为service请求的安全认证定义细粒度的白名单和黑名单
+
+		优化：
+		1. sdk日志中增加一项：当前用户的gameUserId
+		2. 简单的测试功能，用于定位线上service访问故障和db故障
+		3. ItemSpec添加getGroup()方法，获得所在的ItemGroup
+		4. SDK统一事件名称
+	</version>
+
+	<version name="1.2.1.2">
+		Bug Fixed：
+		1.JAVA SDK老版本打包脚本兼容建模工具目录变更
+	</version>
+
+	<version name="1.2.1.1">
+		Feature:
+		1. 为腾讯平台接入配置添加错误提示信息
+	</version>
+
+	<version name="1.2.1.0">
+		Bug Fixed：
+		1.
+		PersistenceSession获取对象时，uid为空直接返回null
+	</version>
+
+	<version name="1.2.0.9">
+		Feature:
+		1. 统计分析日志增加开关
+		2. 增加对腾讯CP平台的支持
+	</version>
+
+	<version name="1.2.0.8">
+		Bug Fixed：
+		1. flush的时候分批进行，用以避免单词flush的数据过多导致内存OOM
+		2. debug level改为ERROR
+	</version>
+
+	<version name="1.2.0.7">
+		Bug Fixed：
+		1. 解决jackson默认不能处理字符串中的控制字符的问题
+	</version>
+
+	<version name="1.2.0.6">
+		Feature:
+		1. 本地打印统计日志
+		2. 增加调节mysql连接池大小的配置功能
+		3.
+		为用户注册登陆失败提供错误码
+		Bug Fixed：
+		1. 修正UserFactory.register中Locker对象的key含有空格的问题
+		2. 创建索引表时，create table 和create index 合并为一条语句
+		3. 修正GM首页用户认证的问题，增加报错信息
+	</version>
+
+	<version name="1.2.0.5">
+		Feature:
+		1. 增加分布式锁机制
+		Bug Fixed：
+		1.
+		MysqlStoreImpl创建表结构时检查表是否已存在
+		2. MCMysqlStoreImpl查询多个getEntityList时
+		如果某个Entity不存在，不再把这不存在的Entity反馈在返回的Map里面
+		3. MysqlDataSource增加超时检测
+		4.
+		为用户注册过程添加分布式锁，以免同名注册的并发时错误
+	</version>
+
+	<version name="1.2.0.4">
+		Bug Fixed：
+		1. 为PerstenceCacheAccess类加锁，解决多线程环境的问题
+	</version>
+
+	<version name="1.2.0.3">
+		Feature:
+		1. ReflectionUtil增加一个简单的深拷贝方法clone
+		2.
+		ItemSpecManager每次取Item时返回一个拷贝而不是原引用
+		Bug Fixed：
+		1. ReflectionUtil
+		getAllFields过滤掉静态属性
+		2. ReflectionUtil getAllMethods过滤掉静态方法
+	</version>
+
+	<version name="1.2.0.2">
+		Bug Fixed:
+		1、把ownedtime的默认包名改回之前的包名game.service.item
+		2. 修改了本地版mysql建立索引表表名不正确的bug
+	</version>
+
+	<version name="1.2.0.1">
+		Bug Fixed:
+		1、解决表名过长无法存入数据库问题。
+	</version>
+
+	<version name="1.2.0.0">
+		Feature:
+		1、本地数据库连接使用连接池形式
+		2、发布Audit
+		Change模块，包括物品uid客户端生成
+		3、原game.service.item包，分为game.service.item.owneditem和game.service.item.itemspec
+		4、在ItemSpecManager提供获取所有分组及物品定义的方法
+		Bug Fixed:
+		1、auditchange仅返回修改的物品属性。
+		2、数据库缓存bug fixed。
+		3、GM模块取物品定义文件的请求允许使用默认语言参数
+		4、返回数据中的有关userprofile中的物品信息仅包括物品uid
+		5、platformLogin失败不应报错
+		6、在注册时检查用户名的合法性。
+		7、多个action在一个请求中，若出错则后续action不执行
+		8、解决URLEncoder将空格转为+而非20%的问题
+		9、规范log文件名
+	</version>
+
+	<version name="1.1.1.8">
+		Feature:
+		1、添加后台audit change增加item时uid验证
+	</version>
+
+	<version name="1.1.1.7">
+		Feature:
+		1.持久化提供count查询
+		Bug Fixed:
+		1.修正新JSON库解析空为"null"而不是null
+		2.UserProfile只传OwnedItem的uid
+	</version>
+
+	<version name="1.1.1.6">
+		Bug Fixed:
+		1.修正新JSON库不能解析形似"[,,,,]"空串
+	</version>
+
+	<version name="1.1.1.5">
+		Feature:
+		Bug Fixed:
+		1.修正Long类型转换的错误
+		2.添加新的lib
+	</version>
+
+	<version name="1.1.1.4">
+		Feature:
+		1.完善resource.admin相关资源文件
+		2.为user
+		register/login/load的回调函数增加request参数
+		3.StatisticsManager改作异步记录log
+		Bug
+		Fixed:
+	</version>
+
+	<version name="1.1.1.3">
+		Feature:
+		Bug Fixed:
+		1.修正从本地mysql库取数不支持utf8的问题
+	</version>
+
+	<version name="1.1.1.2">
+		Feature:
+		1.为GM模块提供admin的调用方式
+		2.为UserProfile.level字段提供index
+		3.支持utf-8字符的通信
+		Bug Fixed:
+		1.更正status请求返回结果中的md5值
+		2.修正uid生成的算法
+	</version>
+
+	<version name="1.1.1.1">
+		Feature:
+		1.为GM模块提供admin的调用方式
+		Bug Fixed:
+		1.更正status请求返回结果中的md5值
+		2.修正uid生成的算法
+	</version>
+
+	<version name="1.1.1.0">
+		Feature:
+		1.改进ItemSpecManager的载入机制
+		2.提供物品uid生成器，支持前台生成uid的方式
+		Bug Fixed:
+		1.对UserProfile去除lazy load，以便前台载入物品
+	</version>
+
+	<version name="1.1.0.3">
+		Feature:
+		1.支持对请求和返回的gzip解压和压缩
+		Bug Fixed:
+		1.对username和password使用toString()获得内容，以免用户使用数字导致类型转换错误
+		2.仅在用户service请求中触发load事件
+		3.删除resource/item以及相关代码逻辑
+		4.完善user.get对于传入参数的检查
+	</version>
+
+	<version name="1.1.0.1">
+		Bug Fixed:
+		1.去除user/get服务返回结果中的item信息
+	</version>
+
+	<version name="1.1.0.0">
+		Feature:
+		1. SDK为GM系统UserProfile操作提供支持（用户登录时间、IP、冻结解冻等）
+		2. Admin Status接口
+		3. 新的用户登录/注册/载入接口和用户自定义扩展
+		4. 登录/注册/载入回调函数
+		5.
+		UserProfile提供OwnedItem的默认值，方便编程
+		6. 支持Index，Transient，Visible等多种注解
+		7.
+		AbstractUserProfile增加了默认属性level,experience,coin,money
+		8.
+		getRequest().getParameters()返回值改成<![CDATA[Map<String, Object>]]>
+		Bug Fixed:
+		1. 文件路径含有空格或者中文的问题
+		2. 数据库持久化之前必须强制Lazy Loading
+	</version>
+	
+	<version name="1.0.1.7">
+		Feature:
+		1. 支持DEBUG级别LOG定位XML解析当前行数
+		Bug Fixed:
+		1.
+		build.xml 类文件不会及时清除，改名会出现问题
+	</version>
+	
+	<version name="1.0.1.6">
+		Feature:
+		1. 支持新的前后台接口
+		2. GM模块安全认证filter
+		3. GM模块API
+	</version>
+	
+	<version name="1.0.1.5">
+		Feature:
+		1. 完全兼容各种item.xml的处理方式
+		2.
+		为资源文件服务增加输出目标文件的多个可选选择，如果第一个没有，则会尝试输出下一个，以此类推
+		3.
+		ItemSpec属性定义支持List和泛型List
+	</version>
+	
+	<version name="1.0.1.4">
+		Feature:
+		1. 支持新的前后台接口
+	</version>
+	
+	<version name="1.0.1.3">
+		Feature:
+		1. Service，Action统计分析
+		2. 支持用户自定义统计分析
+	</version>
+	
+	<version name="1.0.1.2">
+		Feature:
+		1.
+		用于GM模块自定义用户接口的servlet，提供面向redmine的用户认证机制。
+	</version>
+	
+	<version name="1.0.1.1">
+		Bug Fixed:
+		1. build.xml 打包双层src目录问题
+	</version>
+
+</changelog>
